@@ -1,0 +1,49 @@
+---
+title: "DP visual output"
+output: flexdashboard::flex_dashboard
+runtime: shiny
+---
+
+```{r setup, include=FALSE}
+library(ggplot2)
+
+result <- read.table("C:\\Users\\Peter\\CLionProjects\\DP\\Data\\Results\\t4.8k_clustering_output_cells_25_10.000000.txt", header = F)
+names(result) <- c("V1", "V2", "V3")
+#, "V4", "V5", "V6", "V7", "V8", "V9", "V10", "V11", "V12", "V13", "V14")
+
+my_theme <- theme(axis.text=element_text(size=12),
+                  axis.title=element_text(size=13,face="bold"),
+                  panel.background = element_rect(color = "grey25", fill = "white"),
+                  panel.grid.major = element_blank(),
+                  panel.grid.minor = element_blank())
+
+```
+
+Column {.sidebar}
+-----------------------------------------------------------------------
+
+```{r}
+selectInput("x", "Y Axis", c("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13"), selected = "1")
+selectInput("y", "X Axis", c("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13"), selected = "2")
+
+```
+
+Column
+-----------------------------------------------------------------------
+### Graph viz
+
+```{r}
+renderPlot({
+x_c <- names(result)[as.numeric(input$x)]
+y_c <- names(result)[as.numeric(input$y)]
+ggplot(data.frame(result[,c(as.numeric(input$x), as.numeric(input$y))], Class = as.character(result[,3])),
+aes(result[,as.numeric(input$x)], result[,as.numeric(input$y)])) +
+#aes(eval(parse(paste(text = "V",input$x,sep=""))), eval(parse(paste(text = "V",input$y,sep=""))))) +
+#aes(x = as.data.frame(paste(text = "V",input$x,sep="")), y = as.data.frame(paste(text = "V",input$y,sep="")))) +
+geom_point(aes(colour = Class, shape = Class), size = 3, alpha = 1) +
+my_theme +
+labs(title = "t4.8k.dat") +
+labs(x = "V1", y = "V2")
+})
+
+```
