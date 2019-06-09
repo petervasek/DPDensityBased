@@ -51,6 +51,9 @@ void Level::initFirstLevel(DataSet *input){
 
   //trying to obtain n-dimensional cube (composed of first level cells)
   //iterating over whole space containing points
+  if (levelGridSize <= 0) {
+    throw std::out_of_range ("gridSize out of range");
+  }
   unsigned int actualDim = 0;
   double actualCoord[input->getNumOfDimensions()];
   int actualCoordIndex[input->getNumOfDimensions()];

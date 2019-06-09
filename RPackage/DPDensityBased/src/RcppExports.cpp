@@ -5,19 +5,25 @@
 
 using namespace Rcpp;
 
-// main
-int main();
-RcppExport SEXP _DPDensityBased_main() {
+// metaCluster
+int metaCluster(std::string file, double eps, int minPts, std::string outputFile, std::string saveStatusOutputFile, std::string loadFromFile);
+RcppExport SEXP _DPDensityBased_metaCluster(SEXP fileSEXP, SEXP epsSEXP, SEXP minPtsSEXP, SEXP outputFileSEXP, SEXP saveStatusOutputFileSEXP, SEXP loadFromFileSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(main());
+    Rcpp::traits::input_parameter< std::string >::type file(fileSEXP);
+    Rcpp::traits::input_parameter< double >::type eps(epsSEXP);
+    Rcpp::traits::input_parameter< int >::type minPts(minPtsSEXP);
+    Rcpp::traits::input_parameter< std::string >::type outputFile(outputFileSEXP);
+    Rcpp::traits::input_parameter< std::string >::type saveStatusOutputFile(saveStatusOutputFileSEXP);
+    Rcpp::traits::input_parameter< std::string >::type loadFromFile(loadFromFileSEXP);
+    rcpp_result_gen = Rcpp::wrap(metaCluster(file, eps, minPts, outputFile, saveStatusOutputFile, loadFromFile));
     return rcpp_result_gen;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_DPDensityBased_main", (DL_FUNC) &_DPDensityBased_main, 0},
+    {"_DPDensityBased_metaCluster", (DL_FUNC) &_DPDensityBased_metaCluster, 6},
     {NULL, NULL, 0}
 };
 

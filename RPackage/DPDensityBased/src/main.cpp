@@ -19,29 +19,33 @@ using namespace Rcpp;
 
 typedef std::map<int, Cluster*> ClusteringResult;
 
+int main(){
+  return 0;
+}
+
 // [[Rcpp::export]]
-int main() {
+int metaCluster(
+    std::string file = "C:\\Users\\Peter\\CLionProjects\\DP\\Data\\Sources\\t4.8k.dat",
+    double eps = 10,
+    int minPts = 25,
+    std::string outputFile = "C:\\Users\\Peter\\CLionProjects\\DP\\Data\\Results\\t4.8k_abc123.dat",
+    std::string saveStatusOutputFile = "",
+    std::string loadFromFile = "")
+{
 
     omp_set_num_threads(4);
 
+    clock_t start = clock();
+    DataSet input;
+    DataSet deleteInput;
+    Level cellLevel;
 
-  //algorithm parameters
-  int minPts = MIN_PTS;
-  double maxEps = EPS;
-  std::string input_file = INPUT_FILE;
-
-  clock_t start = clock();
-  DataSet input;
-  DataSet deleteInput;
-  Level cellLevel;
-
-  int numOfDim;
-  double gridSize;
-  long cellIdCounter = 0;
-
+    int numOfDim;
+    double gridSize;
+    long cellIdCounter = 0;
 
 #ifdef LOAD_CLUSTERING_RESULT
-  cellLevel.loadResultFromFile(LOAD_PATH, &input);
+  cellLevel.loadResultFromFile(loadFromFile, &input);
   numOfDim = cellLevel.getNumOfDimensions();
 #endif
 
@@ -49,12 +53,12 @@ int main() {
 
 #ifdef LOAD_NEW_DATASET
 #ifdef DELETE_INPUTTED
-  deleteInput.loadInputPoints(input_file);
+  deleteInput.loadInputPoints(file);
 #else
-  input.loadInputPoints(input_file);
+  input.loadInputPoints(file);
 
   numOfDim = input.getNumOfDimensions();
-  gridSize = maxEps / sqrt(numOfDim);
+  gridSize = eps / sqrt(numOfDim);
   cellLevel.setLevelGridSize(gridSize);
   cellLevel.setNumOfDimensions(numOfDim);
   cellLevel.initFirstLevel(&input);
@@ -87,7 +91,8 @@ std::cout << "GDPAM tables successfully initiated\n";
 #pragma omp for schedule(dynamic)
 #endif
   for (int i = 0; i < numOfDim; i++) {
-    gdpamTables[i].setCellPosition(i, &cellLevel);
+    gdpamTables[i].setCellPosition(i, &cellLevel, static_cast<int>(ceil((input.getCoordBordersMax()[i] - input.getCoordBordersMin()[i]) / gridSize))
+);
   }
 #ifdef OPENMP
 }
@@ -239,7 +244,8 @@ for (int i = 0; i < numOfDim; i++) {
   gdpamTables[i].initTable(i, &cellLevel, input.getCoordBordersMax(), input.getCoordBordersMin());
 }
 for (int i = 0; i < numOfDim; i++) {
-  gdpamTables[i].setCellPosition(i, &cellLevel);
+  gdpamTables[i].setCellPosition(i, &cellLevel, static_cast<int>(ceil((input.getCoordBordersMax()[i] - input.getCoordBordersMin()[i]) / gridSize))
+);
 }
 
 #endif
@@ -370,6 +376,7 @@ for(auto &c : cellLevel.getCells()) {
     if ( clusters.find(cParent->cellParent) == clusters.end() ) {
       clusters.emplace(cParent->cellParent, new Cluster);
       clusters[cParent->cellParent]->id = idCounter;
+      clusters[cParent->cellParent]->numOfPoints = 0;
       idCounter++;
 
     }
@@ -377,31 +384,32 @@ for(auto &c : cellLevel.getCells()) {
     clusters[cParent->cellParent]->numOfPoints += c.second.get()->pointCounter;
   }
 }
+
 i = 1;
+std::cout << "Clusters:\n";
 for(auto &a : clusters) {
   std::cout << "cluster no. " << i << " cell size: " << a.second->cells.size() << "\n";
   i++;
 }
 
-std::ofstream file;
-file.open(input.getOutputName("clustering_output", input_file, maxEps, minPts));
+std::ofstream fileOut;
+fileOut.open(input.getOutputName("clustering_output", file, eps, minPts));
 for (auto &inputPoint : input.getInputPoints()) {
-  file << inputPoint->toString(numOfDim);
-  file << inputPoint->clusterIndex << "\n";
+  fileOut << inputPoint->toString(numOfDim);
+  fileOut << inputPoint->clusterIndex << "\n";
 }
-file.close();
+fileOut.close();
 
-
-file.open(input.getOutputName("clustering_output_cells", input_file, maxEps, minPts));
+fileOut.open(input.getOutputName("clustering_output_cells", file, eps, minPts));
 for (auto &cl : clusters) {
   for (auto &cell : cl.second->cells) {
     for(int j = 0 ; j<numOfDim ; j++) {
-      file << cell.get()->coord[j] << " ";
+      fileOut << cell.get()->coord[j] << " ";
     }
-    file << cl.second->id << "\n";
+    fileOut << cl.second->id << "\n";
   }
 }
-file.close();
+fileOut.close();
 
 
 #ifdef SAVE_CLUSTERING_RESULT
@@ -409,7 +417,7 @@ for (auto &i : input.getInputPoints()) {
   i.get()->st = Point::visited;
 }
 
-cellLevel.saveResultToFile(input.getOutputName("clustering_state", input_file, maxEps, minPts), &input);
+cellLevel.saveResultToFile(input.getOutputName("clustering_state", file, eps, minPts), &input);
 #endif
 
 clock_t stop = clock();

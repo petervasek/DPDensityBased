@@ -14,7 +14,7 @@ public:
   HyperGridBitmap();
   ~HyperGridBitmap();
   void initTable(int dimIndex, Level *cellLevel, double *bordersMax, double *bordersMin);
-  void setCellPosition(int dimIndex, Level *cellLevel);
+  void setCellPosition(int dimIndex, Level *cellLevel, int maxIndex);
   void getNeighbours(int dimIndex, std::shared_ptr<Cell> target, int *dimResultVector, int numOfCells, int dim);
   int getRowSize();
   int getColumnSize();
