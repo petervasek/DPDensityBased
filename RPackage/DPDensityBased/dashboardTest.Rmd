@@ -7,10 +7,9 @@ runtime: shiny
 ```{r setup, include=FALSE}
 library(ggplot2)
 
-file = "C:\\Users\\Peter\\CLionProjects\\DP\\Data\\Sources\\t4.8k.dat"
-#file = "C:\\Users\\Peter\\CLionProjects\\DP\\Data\\Sources\\fcs8_unlabeled.txt"
-outputFile = "C:\\Users\\Peter\\CLionProjects\\DP\\Data\\Results\\t4.8k.dat"
-#outputFile = "C:\\Users\\Peter\\CLionProjects\\DP\\Data\\Results\\fcs8_unlabeled.txt"
+path = "C:\\Users\\UserX\\CLionProjects\\DP\\Data\\Sources\\"
+file = "t4.8k.dat"
+outputFile = "C:\\Users\\UserX\\CLionProjects\\DP\\Data\\Results\\t4.8k.dat"
 eps = 10
 minPts = 25
 
@@ -22,7 +21,7 @@ dim <- lengths(as.list(strsplit(inp_first_line, " ")))
 result1Name = paste(substr(outputFile, 0,nchar(outputFile)-4), "_clustering_output_", minPts, "_", eps, ".txt", sep = "");
 result2Name = paste(substr(outputFile, 0,nchar(outputFile)-4), "_clustering_output_cells_", minPts, "_", eps, ".txt", sep = "")
 
-DPDensityBased::metaCluster(file, eps, minPts)
+DPDensityBased::metaCluster(paste(path, file, sep = ""), eps, minPts)
 
 result1 <- read.table(result1Name, header = F)
 result2 <- read.table(result2Name, header = F)
@@ -67,7 +66,7 @@ ggplot(data.frame(result[,c(as.numeric(input$x), as.numeric(input$y))], Class = 
 aes(result[,as.numeric(input$x)], result[,as.numeric(input$y)])) +
 geom_point(aes(colour = Class, shape = ), size = 3, alpha = 1) +
 my_theme +
-labs(title = "t4.8k.dat") +
+labs(title = file) +
 labs(x = x_c, y = y_c)
 })
 
