@@ -79,7 +79,7 @@ int main(int argc, char* argv[]) {
         #pragma omp for schedule(dynamic)
 #endif
         for (int i = 0; i < numOfDim; i++) {
-            gdpamTables[i].setCellPosition(i, &cellLevel);
+            gdpamTables[i].setCellPosition(i, &cellLevel, static_cast<int>(ceil((input.getCoordBordersMax()[i] - input.getCoordBordersMin()[i]) / gridSize)));
         }
 #ifdef OPENMP
     }
@@ -231,7 +231,7 @@ int main(int argc, char* argv[]) {
         gdpamTables[i].initTable(i, &cellLevel, input.getCoordBordersMax(), input.getCoordBordersMin());
     }
     for (int i = 0; i < numOfDim; i++) {
-        gdpamTables[i].setCellPosition(i, &cellLevel);
+        gdpamTables[i].setCellPosition(i, &cellLevel, static_cast<int>(ceil((input.getCoordBordersMax()[i] - input.getCoordBordersMin()[i]) / gridSize)));
     }
 
 #endif
