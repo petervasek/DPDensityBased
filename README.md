@@ -1,44 +1,44 @@
 # DPDensityBased
 Code result of diploma thesis
 
-## Vısledkom práce sú:
-	- C++ projekt s core algoritmom.
-	- R kninica obsahujúca vo forme Rcpp core algoritmus. Pre modifikovanie kódu a väèšiu rıchlos sa ale odporúèa spúšanie priamo C++ programu.
- 	- Zbierka R skriptov na manipuláciu so vstupnımi dátami, predspracovanie pre vstup algoritmu, vyhodnotenie a vizualizáciu vısledkov.
+## VÃ½sledkom prÃ¡ce sÃº:
+ * C++ projekt s core algoritmom.
+ * R kniÅ¾nica obsahujÃºca vo forme Rcpp core algoritmus. Pre modifikovanie kÃ³du a vÃ¤ÄÅ¡iu rÃ½chlosÅ¥ sa ale odporÃºÄa spÃºÅ¡Å¥anie priamo C++ programu.
+ * Zbierka R skriptov na manipulÃ¡ciu so vstupnÃ½mi dÃ¡tami, predspracovanie pre vstup algoritmu, vyhodnotenie a vizualizÃ¡ciu vÃ½sledkov.
 
-Proces manipulácie s našim riešením môeme rozdeli na 3 pomyselné èasti:
- 	- Naèítanie a analıza fcs dát, ich transformácia do podoby pouite¾nej ako vstup algoritmu (èi u R kninice, alebo surového vstupu do C++ programu).
- 	- Vykonanie / vykonávanie zhlukovania.
-	- Práca s vısledkami.
+Proces manipulÃ¡cie s naÅ¡im rieÅ¡enÃ­m mÃ´Å¾eme rozdeliÅ¥ na 3 pomyselnÃ© Äasti:
+ * NaÄÃ­tanie a analÃ½za fcs dÃ¡t, ich transformÃ¡cia do podoby pouÅ¾iteÄ¾nej ako vstup algoritmu (Äi uÅ¾ R kniÅ¾nice, alebo surovÃ©ho vstupu do C++ programu).
+ * Vykonanie / vykonÃ¡vanie zhlukovania.
+ * PrÃ¡ca s vÃ½sledkami.
 
-Nevyhnutnou podmienkou pre vykonanie hociktorej z èastí je nainštalovanie jazyka R (https://www.r-project.org/), ideálne v aktuálnej verzií 3.6.0.
-Ïalším odporúèanım softvérom je:
-	- R Studio (https://www.rstudio.com/products/rstudio/), ideálne v aktuálnej verzií 1.2.1335.
-	- C++ kompilátor s podporou OpenMP.
-	- C++ IDE pod¾a vlastnej chuti. 
+Nevyhnutnou podmienkou pre vykonanie hociktorej z ÄastÃ­ je nainÅ¡talovanie jazyka R (https://www.r-project.org/), ideÃ¡lne v aktuÃ¡lnej verziÃ­ 3.6.0.
+ÄalÅ¡Ã­m odporÃºÄanÃ½m softvÃ©rom je:
+ * R Studio (https://www.rstudio.com/products/rstudio/), ideÃ¡lne v aktuÃ¡lnej verziÃ­ 1.2.1335.
+ * C++ kompilÃ¡tor s podporou OpenMP.
+ * C++ IDE podÄ¾a vlastnej chuti. 
 
-## Naèítanie a analıza fcs dát:
-Pre naèítanie fcs súborov v R jazyku potrebujeme nainštalovanú kninicu "flowCore". Následne si vieme uloi do premennej ¾ubovo¾nı vstupnı cytometrickı súbor ako:
+## NaÄÃ­tanie a analÃ½za fcs dÃ¡t:
+Pre naÄÃ­tanie fcs sÃºborov v R jazyku potrebujeme nainÅ¡talovanÃº kniÅ¾nicu "flowCore". NÃ¡sledne si vieme uloÅ¾iÅ¥ do premennej Ä¾ubovoÄ¾nÃ½ vstupnÃ½ cytometrickÃ½ sÃºbor ako:
 fcs_read = read.FCS("path");.
-Matica expresivity génov v naèítanom súbore je premenná objektu fcs_read@exprs. V fcs_read@parameters@data$name si vieme pozrie, ktorı atribút predstavuje ktorı proteín. Ak chceme získa predstavu o rozloení hustoty v stavovom priestore, môeme poui algoritmus OPTICS. Ten sa nachádza v kninici "dbscan". Kód pre túto èas manipulácie s dátami pokrıva skript "readFCSplotOPTICS.R" priloenı na elektronickom nosièi.
+Matica expresivity gÃ©nov v naÄÃ­tanom sÃºbore je premennÃ¡ objektu fcs_read@exprs. V fcs_read@parameters@data$name si vieme pozrieÅ¥, ktorÃ½ atribÃºt predstavuje ktorÃ½ proteÃ­n. Ak chceme zÃ­skaÅ¥ predstavu o rozloÅ¾enÃ­ hustoty v stavovom priestore, mÃ´Å¾eme pouÅ¾iÅ¥ algoritmus OPTICS. Ten sa nachÃ¡dza v kniÅ¾nici "dbscan". KÃ³d pre tÃºto ÄasÅ¥ manipulÃ¡cie s dÃ¡tami pokrÃ½va skript "readFCSplotOPTICS.R" priloÅ¾enÃ½ na elektronickom nosiÄi.
 
 ## Vykonanie zhlukovania:
-Zhlukovanie je moné spusti buï ako funkciu R kninice DPDensityBased::metaCluster() s prípustnımi argumentmi:
-	- file - meno vstupného súboru.
-	- eps - parameter eps pre zhlukovanie.
-	- minPts - parameter minPts pre zhlukovanie.
-	- outputFile - explicitné stanovenie názvu vıstupného súboru.
-	- saveStatusOutputFile - súbor do ktorého chceme dosta vıslednı stav zhlukovania pre budúce dynamické pouitie.
-	- loadFromFile - súbor z ktorého chceme naèíta stav zhlukovania pred zaèatím zhlukovania.
+Zhlukovanie je moÅ¾nÃ© spustiÅ¥ buÄ ako funkciu R kniÅ¾nice DPDensityBased::metaCluster() s prÃ­pustnÃ½mi argumentmi:
+ * file - meno vstupnÃ©ho sÃºboru.
+ * eps - parameter eps pre zhlukovanie.
+ * minPts - parameter minPts pre zhlukovanie.
+ * outputFile - explicitnÃ© stanovenie nÃ¡zvu vÃ½stupnÃ©ho sÃºboru.
+ * saveStatusOutputFile - sÃºbor do ktorÃ©ho chceme dostaÅ¥ vÃ½slednÃ½ stav zhlukovania pre budÃºce dynamickÃ© pouÅ¾itie.
+ * loadFromFile - sÃºbor z ktorÃ©ho chceme naÄÃ­taÅ¥ stav zhlukovania pred zaÄatÃ­m zhlukovania.
 
-Alebo klasickım spustením kompilátorom vytvoreného DPDensityBased.exe so vstupnımi parametrami rovnakımi ako vyššie pri R volaní. Priloené binárne súbory by nemuseli fungova pod inou architektúrou alebo operaènım systémom, odporúèa sa radšej si vybuildova projekt nanovo.
+Alebo klasickÃ½m spustenÃ­m kompilÃ¡torom vytvorenÃ©ho DPDensityBased.exe so vstupnÃ½mi parametrami rovnakÃ½mi ako vyÅ¡Å¡ie pri R volanÃ­. PriloÅ¾enÃ© binÃ¡rne sÃºbory by nemuseli fungovaÅ¥ pod inou architektÃºrou alebo operaÄnÃ½m systÃ©mom, odporÃºÄa sa radÅ¡ej si vybuildovaÅ¥ projekt nanovo.
 ## 
-Práca s vısledkami:
-Po prebehnutí algoritmu a obdraní vıstupného súboru máme nieko¾ko moností:
-	- Vizualizácia cez dashboard priloenı v DPDensityBased kninici volaním ::visualize() s parametrom premennou vıstupného zhlukovania.
-	- Vyhodnotenie kvality zhlukovania validaènımi indexami Rand, Jaccard a Fowlkes-Mallows. Nástrojom na to je priloenı skript "processResultIndexes.r". 
-	- Priama vizualizácia cez ggplot kninicu, nástrojom je priloenı skript "visualization.R".
-	- Vizualizácia pomocou PCA alebo t-SNE, priloené skripty "pcaScript.R" a "Rtsne.R"
-	- Pre skúsenejších monos porovna hodnoty s hodnotami inıch zhlukovacích algoritmov. V repertoári máme skript pre K-Means, flowSOM a RphenoGraph, nainštalova si ich ale je potrebné manuálne, keïe Bioconductor zatia¾ oficiálne nepodporuje najnovšiu verziu Rtools.
+PrÃ¡ca s vÃ½sledkami:
+Po prebehnutÃ­ algoritmu a obdrÅ¾anÃ­ vÃ½stupnÃ©ho sÃºboru mÃ¡me niekoÄ¾ko moÅ¾nostÃ­:
+ * VizualizÃ¡cia cez dashboard priloÅ¾enÃ½ v DPDensityBased kniÅ¾nici volanÃ­m ::visualize() s parametrom premennou vÃ½stupnÃ©ho zhlukovania.
+ * Vyhodnotenie kvality zhlukovania validaÄnÃ½mi indexami Rand, Jaccard a Fowlkes-Mallows. NÃ¡strojom na to je priloÅ¾enÃ½ skript "processResultIndexes.r". 
+ * Priama vizualizÃ¡cia cez ggplot kniÅ¾nicu, nÃ¡strojom je priloÅ¾enÃ½ skript "visualization.R".
+ * VizualizÃ¡cia pomocou PCA alebo t-SNE, priloÅ¾enÃ© skripty "pcaScript.R" a "Rtsne.R"
+ * Pre skÃºsenejÅ¡Ã­ch moÅ¾nosÅ¥ porovnaÅ¥ hodnoty s hodnotami inÃ½ch zhlukovacÃ­ch algoritmov. V repertoÃ¡ri mÃ¡me skript pre K-Means, flowSOM a RphenoGraph, nainÅ¡talovaÅ¥ si ich ale je potrebnÃ© manuÃ¡lne, keÄÅ¾e Bioconductor zatiaÄ¾ oficiÃ¡lne nepodporuje najnovÅ¡iu verziu Rtools.
 
-Pre kompilovanie Rcpp kninice je potrebné explicitne nastavi kompilátoru podporu pre C++11 napríklad nastavením "Sys.setenv("PKG_CXXFLAGS"="-std=c++11")". Pre podporu OpenMP kompilátorom zasa nesmieme zabudnú na argument "-fopenmp".
+Pre kompilovanie Rcpp kniÅ¾nice je potrebnÃ© explicitne nastaviÅ¥ kompilÃ¡toru podporu pre C++11 naprÃ­klad nastavenÃ­m "Sys.setenv("PKG_CXXFLAGS"="-std=c++11")". Pre podporu OpenMP kompilÃ¡torom zasa nesmieme zabudnÃºÅ¥ na argument "-fopenmp".
