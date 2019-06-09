@@ -10,11 +10,4 @@ endif()
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_subdirectory(lib)
-include_directories(lib/googletest/include)
-include_directories(lib/googlemock/include)
-
-add_executable(DP main.cpp Model/Implementation/Point.cpp Model/Point.h Model/Implementation/Cell.cpp Model/Cell.h Model/Implementation/Cluster.cpp Model/Cluster.h Model/Implementation/Level.cpp Model/Level.h main.h Model/Implementation/DataSet.cpp Model/DataSet.h Model/Implementation/HyperGridBitmap.cpp Model/HyperGridBitmap.h Tests/UnitTests/HyperGridBitmapTest.cpp Tests/UnitTests/DataSetTest.cpp Tests/PerformanceTests/FindCellTest.cpp Tests/IntegrationTests/LevelInitTest.cpp)
-
-target_link_libraries(DP gtest)
-target_link_libraries(DP gmock)
+add_executable(DP main.cpp Model/Implementation/Point.cpp Model/Point.h Model/Implementation/Cell.cpp Model/Cell.h Model/Implementation/Cluster.cpp Model/Cluster.h Model/Implementation/Level.cpp Model/Level.h main.h Model/Implementation/DataSet.cpp Model/DataSet.h Model/Implementation/HyperGridBitmap.cpp Model/HyperGridBitmap.h)
