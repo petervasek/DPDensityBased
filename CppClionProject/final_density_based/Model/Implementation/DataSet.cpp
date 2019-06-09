@@ -24,6 +24,10 @@ void DataSet::loadInputPoints(std::string fileName) {
     std::ifstream file;
     file.open(fileName);
 
+    if(file.peek() == -1){
+        return;
+    }
+
     if (file.is_open()) {
         std::string firstLine;
         getline(file, firstLine);
@@ -77,6 +81,7 @@ void DataSet::loadInputPoints(std::string fileName) {
 
             inputPoints.emplace_back(p);
         }
+
     }
     file.close();
 }
@@ -105,8 +110,8 @@ void DataSet::printNoise(std::vector<Point> &input) {
 }
 
 bool DataSet::datasetHasHeader(std::string firstLine) {
-    std::regex unwantedChars("[\"a-zA-Z]");
-    return std::regex_search(firstLine, unwantedChars);
+    std::regex headerOnlyChars("[\"a-zA-Z]");
+    return std::regex_search(firstLine, headerOnlyChars);
 }
 
 int DataSet::findOutNumOfDimensions(std::string firstLine) {

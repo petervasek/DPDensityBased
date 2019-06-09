@@ -16,7 +16,13 @@ HyperGridBitmap::~HyperGridBitmap() {
 
 void HyperGridBitmap::initTable(int dimIndex, Level *cellLevel, double *bordersMax, double *bordersMin) {
 
-    rowSize = (int) (ceil((bordersMax[dimIndex] - bordersMin[dimIndex]) / cellLevel->getLevelGridSize()));
+    double gridSize = cellLevel->getLevelGridSize();
+    double sizeInDim = bordersMax[dimIndex] - bordersMin[dimIndex];
+    if(gridSize <= 0 || sizeInDim < 0){
+        return;
+    }
+
+    rowSize = (int) (ceil(sizeInDim / gridSize));
     columnSize = (cellLevel->getNumOfCells());
 
     coreGrids = new bool *[rowSize];
@@ -25,12 +31,16 @@ void HyperGridBitmap::initTable(int dimIndex, Level *cellLevel, double *bordersM
     }
 }
 
-void HyperGridBitmap::setCellPosition(int dimIndex, Level *cellLevel) {
+void HyperGridBitmap::setCellPosition(int dimIndex, Level *cellLevel, int maxIndex) {
 
     //number of columns is equal to number of cells, it does not matter which array we iterate through
     int i = 0;
     for (auto &cell : cellLevel->getCells()) {
+        if (cell.second.get()->coordIndex[dimIndex] > maxIndex || cell.second.get()->coordIndex[dimIndex] < 0) {
+            throw std::out_of_range ("cell out of bounds");
+        }
         //row with right index for current cell gets true
+
         coreGrids[cell.second.get()->coordIndex[dimIndex]][i] = true;
         i++;
     }
@@ -50,7 +60,6 @@ void HyperGridBitmap::getNeighbours(int dimIndex, std::shared_ptr<Cell> target, 
     if(upperBound > rowSize-1) {
         upperBound = rowSize-1;
     }
-
 
     for (int i = lowerBound; i <= upperBound; i++) {
         for(int j = 0 ; j<numOfCells ; j++) {

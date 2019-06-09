@@ -35,6 +35,7 @@ std::shared_ptr<Cell> Level::findCell(std::shared_ptr<Point> &point, double *bor
 void Level::initFirstLevel(DataSet *input){
 
     //pomocny vypis
+/*
     long cubeNum = 1;
     for(int i = 0 ; i < input->getNumOfDimensions() ; i++) {
         std::cout << "dim " << i+1 << " min:\t" << input->getCoordBordersMin()[i] << "\t\tmax:" << input->getCoordBordersMax()[i] << "\n";
@@ -44,14 +45,16 @@ void Level::initFirstLevel(DataSet *input){
     }
     std::cout << "gridSize:\t" << levelGridSize ;
     std::cout << "\npocet n-kociek:\t" << cubeNum << "\n\n";
-
+*/
     //trying to obtain n-dimensional cube (composed of first level cells)
     //iterating over whole space containing points
+    if (levelGridSize <= 0) {
+        throw std::out_of_range ("gridSize out of range");
+    }
     unsigned int actualDim = 0;
     double actualCoord[input->getNumOfDimensions()];
     int actualCoordIndex[input->getNumOfDimensions()];
     int cellNums[input->getNumOfDimensions()];
-
 #ifdef OPENMP
     #pragma omp parallel shared(input, cellNums, actualCoord, actualCoordIndex)
     {
@@ -59,7 +62,7 @@ void Level::initFirstLevel(DataSet *input){
 #endif
         for (unsigned int i = 0; i < input->getNumOfDimensions(); i++) {
             cellNums[i] = (int) ceil((input->getCoordBordersMax()[i] - input->getCoordBordersMin()[i]) / levelGridSize);
-            std::cout << "\n" << i << ". dim = " << cellNums[i] << " ";
+            //std::cout << "\n" << i << ". dim = " << cellNums[i] << " ";
             actualCoord[i] = input->getCoordBordersMin()[i];     //starting coordinates in every dimension set to min value
             actualCoordIndex[i] = 0;
         }
@@ -76,6 +79,7 @@ void Level::initFirstLevel(DataSet *input){
         #pragma omp for schedule(dynamic)
 #endif
         for (unsigned int i = 0; i < input->getInputPoints().size(); i++) {
+
             auto point = input->getInputPoints().at(i);
             if(point.get()->st == Point::visited){
                 continue;
@@ -147,7 +151,7 @@ void Level::initFirstLevel(DataSet *input){
 #ifdef OPENMP
     }
 #endif
-    std::cout << "\ninput size: " << input->getInputPoints().size() << "\tpoints assigned: " << pointCounter << "\n\n\n";
+    //std::cout << "\ninput size: " << input->getInputPoints().size() << "\tpoints assigned: " << pointCounter << "\n\n\n";
 
 }
 
